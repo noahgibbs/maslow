@@ -78,3 +78,42 @@ class TestAssignHash < Test::Unit::TestCase
   end
 
 end
+
+class TestCollapseFunction < Test::Unit::TestCase
+  def setup
+    @root = Versioned::Root.new
+    @hash = Versioned::Hash.new @root
+  end
+
+  def test_trivial_collapse
+    @hash["bob"] = 1
+    @hash[3] = "sam"
+    assert_equal @hash, { "bob" => 1, 3 => "sam" }
+  end
+
+  def test_nested_collapse
+    @hash["bob"] = 1
+    @hash["jim"] = 1
+    @hash["bobo"] = true
+    @root.new_version
+    @hash["sam"] = "jim"
+    @hash["bob"] = 2
+    @root.new_version
+    @hash["bob"] = 3
+    @hash["jim"] = 9
+    @hash["gorb"] = 7
+    @root.new_version
+    @hash["bob"] = 4
+    @hash["logan"] = [ "sam", "jim", "bob" ]
+
+    assert_equal @hash.collapse, { "bob" => 4, "jim" => 9, "bobo" => true,
+                                   "sam" => "jim", "gorb" => 7,
+                                   "logan" => ["sam", "jim", "bob"] }
+
+    @root.rollback
+    assert_equal @hash.collapse, { "bob" => 3, "jim" => 9, "bobo" => true,
+                                   "sam" => "jim", "gorb" => 7 }
+
+  end
+
+end

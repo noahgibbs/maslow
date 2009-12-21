@@ -123,4 +123,33 @@ class Versioned::Hash
     @values[@root.version] ||= {}
     @values[@root.version][key] = value
   }
+
+  def keys
+    self.collapse.keys
+  end
+
+  def values
+    self.collapse.values
+  end
+
+  def each_pair(&block)
+    self.collapse.each_pair &block
+  end
+
+  define_method "==".to_sym, proc { |value|
+    if value.is_a? Versioned::Hash
+      value = value.collapse
+    end
+
+    self.collapse == value
+  }
+
+  # Later we can cache this
+  def collapse(version = @root.version)
+    par = version.parent
+    return @values[version] unless par
+    prev = collapse par
+    prev.merge @values[version]
+  end
+
 end
