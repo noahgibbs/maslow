@@ -1,0 +1,16 @@
+Hierarchy of objects:  environment contains location, which contains
+  people and usables.
+
+Easy way to modify objects tentatively -- to create or destroy usables, move
+  people around, change attributes of all concerned, et cetera.
+
+Easy way to roll back modifications
+
+Small changes are small in memory -- don't fully copy all states
+
+Easy to explicitly commit changes.  Can choose a "child" state and declare
+  it to be the final one, getting rid of all the parents (or just collapsing
+  one or more levels?)
+
+Child object should keep track of its root object for versioning.  Root
+  object should allow pushing/branching/etc.

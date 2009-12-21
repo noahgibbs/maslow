@@ -1,0 +1,20 @@
+Overlays:
+  * Add environment overlays to change positions, conditions, etc of a given
+    person, resource, location, etc
+
+Locations:
+  * movement
+
+Needs:
+  * high-water mark and low-water mark for satisfying needs
+  * 'need' that extinguishes over time to represent unhappiness from fatigue/effort?
+
+Actions:
+  * actual results versus predicted results
+
+Happiness function:
+  * Future (predicted) states
+  * heuristics for resources owned (carrying food, water, etc)
+  * Levels of smart
+  * preferences for one need or another, one item or another
+  * not enjoy thinking very much
