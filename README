@@ -1,0 +1,6 @@
+This is a conversion of an old AI project.  The old idea was fine, but the
+architecture was sprawling and very un-Ruby.
+
+I've added versioned.rb for versioned Hash objects that can make a tree of
+values -- useful for speculative execution for AIs to gauge the results of
+their actions.
