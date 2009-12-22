@@ -111,7 +111,7 @@ class Versioned::Hash
     ver = @root.version
     begin
       if @values[ver]
-        return @values[ver][key] if @values[ver][key]
+        return @values[ver][key] if @values[ver].has_key?(key)
       end
       ver = ver.parent
       return nil unless ver
