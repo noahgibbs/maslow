@@ -4,11 +4,12 @@
 require "versioned"
 require "maslow"
 
-include "maslow"
+include Maslow
 
 root = Versioned::Root.new
 
 env = environment root, :name => :seas_of_night,
+  :critters => {},
   :needs => {
     :food => need(:importance => Importance::Food,
                   :anticipate => true, :regular => true),
@@ -31,9 +32,9 @@ env = environment root, :name => :seas_of_night,
       :needs => { :food => true, :water => true, :entertainment => 0.5}),
     :crew => critter_type(:is_a => [ :pirate ],
       :needs => { :lifeforce => true, :acclaim => true,
-                  :entertainment => true]),
+                  :entertainment => true }),
     :captain => critter_type(:is_a => [ :pirate ],
-     :needs => { :lifeforce => true, :acclaim => 2.0, :entertainment => true]),
+      :needs => { :lifeforce => true, :acclaim => 2.0, :entertainment => true }),
   },
   :actions => {
     :none => action(:resources => {},
@@ -62,8 +63,7 @@ env = environment root, :name => :seas_of_night,
     :fruit => resource_type(:fulfills => { :food => 0.2, :water => 0.1}),
     :canteen => resource_type(:fulfills => { :water => 0.8 }),
     :games => resource_type(:fulfills => { :entertainment => 0.5 }),
-  },
-}
+  }
 
 hold = env[:locations][:ships_hold]
 

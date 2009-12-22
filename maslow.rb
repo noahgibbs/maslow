@@ -44,6 +44,10 @@ module Maslow
         final_options[key] = options[key]
       end
     end
+    options.keys.each do |key, value|
+      raise "Illegal option #{key} passed as option!" unless
+        allowed_options.keys.include? key
+    end
     final_options
   end
 
@@ -61,6 +65,7 @@ module Maslow
       :name => Symbol,
       :needs => Hash,
       :critter_types => Hash,
+      :critters => Hash,
       :actions => Hash,
       :locations => Hash,
       :resource_types => Hash,
@@ -68,16 +73,16 @@ module Maslow
     Versioned::Hash.new root, verify_options(legal_options, options)
   end
 
-  def need(options)
+  def need(options = {})
     legal_options = {
-      :importance => Fixnum,
-      :anticipate => Boolean,
-      :regular => Boolean,
+      :importance => Float,
+      :anticipate => TrueClass,
+      :regular => TrueClass,
     }
     verify_options(legal_options, options)
   end
 
-  def critter_type(options)
+  def critter_type(options = {})
     legal_options = {
       :needs => Hash,
       :is_a => Array,
@@ -85,7 +90,7 @@ module Maslow
     verify_options(legal_options, options)
   end
 
-  def critter(options)
+  def critter(options = {})
     legal_options = {
       :location => Symbol,
       :critter_type => Symbol,
@@ -95,7 +100,7 @@ module Maslow
     verify_options(legal_options, options)
   end
 
-  def action(options)
+  def action(options = {})
     legal_options = {
       :resources => Hash,
       :participants => Hash,
@@ -104,7 +109,7 @@ module Maslow
     verify_options(legal_options, options)
   end
 
-  def location(options)
+  def location(options = {})
     legal_options = {
       :resources => Hash,
       :locations => Hash, # sub-locations
@@ -112,10 +117,9 @@ module Maslow
     verify_options(legal_options, options)
   end
 
-  def resource_type(options)
+  def resource_type(options = {})
     legal_options = {
       :fulfills => Hash,
-      :locations => Boolean,
     }
     verify_options(legal_options, options)
   end
