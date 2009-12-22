@@ -1,35 +1,128 @@
 module Maslow
-  # Basic Maslow's Hierarchy taken from the Wikipedia entry for
-  # "Maslow's Hierarchy of Needs".
+  module Importance
+    # Basic Maslow's Hierarchy taken from the Wikipedia entry for
+    # "Maslow's Hierarchy of Needs".
 
-  # Physiological needs
-  PhysiologicalImportant = 100.0
-  AirImportant = 100.0
-  HomeostasisImportant = 90.0    # Lack of injury, basically
-  WaterImportant = 80.0
-  FoodImportant = 70.0
-  SleepImportant = 65.0
-  SexImportant = 60.0
+    # Physiological needs
+    Physiological = 100.0
+    Air = 100.0
+    Homeostasis = 90.0    # Lack of injury, basically
+    Water = 80.0
+    Food = 70.0
+    Sleep = 65.0
+    Sex = 60.0
 
-  # Safety needs
-  SecurityImportant = 50.0
-  SafetyImportant = 50.0
-  FamilyImportant = 40.0
-  PropertyImportant = 40.0
+    # Safety needs
+    Security = 50.0
+    Safety = 50.0
+    Family = 40.0
+    Property = 40.0
 
-  # Love/belonging
-  # Family, friendship, sexual intimacy
+    # Love/belonging
+    # Family, friendship, sexual intimacy
+    Belonging = 35.0
 
-  # Self-esteem
-  # Self-esteem, confidence, achievement, respect of others,
-  # respect by others
-  EsteemImportant = 20.0
+    # Self-esteem
+    # Self-esteem, confidence, achievement, respect of others,
+    # respect by others
+    Esteem = 20.0
 
-  # Self-Actualization
-  # Morality, creativity, spontaneity, problem solving, lack of prejudice,
-  # acceptance of facts
-  ActualizationImportant = 10.0
+    # Self-Actualization
+    # Morality, creativity, spontaneity, problem solving, lack of prejudice,
+    # acceptance of facts
+    Actualization = 10.0
+  end
+
+  protected
+
+  def verify_options(allowed_options, options)
+    final_options = {}
+    allowed_options.each do |key, value|
+      if options.include?(key)
+        raise "Option #{key} is of class #{options[key].class.to_s}, not " +
+          "class #{value.to_s}!" unless options[key].is_a?(value)
+        final_options[key] = options[key]
+      end
+    end
+    final_options
+  end
+
+  public
+
+  def environment(root, options = nil)
+    if root.is_a?(Hash)
+      raise "No root object passed to environment()!" unless options[:root]
+
+      options = root
+      root = options[:root]
+    end
+
+    legal_options = {
+      :name => Symbol,
+      :needs => Hash,
+      :critter_types => Hash,
+      :actions => Hash,
+      :locations => Hash,
+      :resource_types => Hash,
+    }
+    Versioned::Hash.new root, verify_options(legal_options, options)
+  end
+
+  def need(options)
+    legal_options = {
+      :importance => Fixnum,
+      :anticipate => Boolean,
+      :regular => Boolean,
+    }
+    verify_options(legal_options, options)
+  end
+
+  def critter_type(options)
+    legal_options = {
+      :needs => Hash,
+      :is_a => Array,
+    }
+    verify_options(legal_options, options)
+  end
+
+  def critter(options)
+    legal_options = {
+      :location => Symbol,
+      :critter_type => Symbol,
+      :resources => Hash,
+      :needs_due => Hash,
+    }
+    verify_options(legal_options, options)
+  end
+
+  def action(options)
+    legal_options = {
+      :resources => Hash,
+      :participants => Hash,
+      :consequences => Hash,
+    }
+    verify_options(legal_options, options)
+  end
+
+  def location(options)
+    legal_options = {
+      :resources => Hash,
+      :locations => Hash, # sub-locations
+    }
+    verify_options(legal_options, options)
+  end
+
+  def resource_type(options)
+    legal_options = {
+      :fulfills => Hash,
+      :locations => Boolean,
+    }
+    verify_options(legal_options, options)
+  end
+
 end
+
+
 
 =begin
   def fulfill_need(need_name, amt)

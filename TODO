@@ -1,0 +1,5 @@
+Versioned TODO:
+
+* Add versioned Array object
+* Freeze misc objects when converting to versioned?
+* Add to_versioned interface for objects
